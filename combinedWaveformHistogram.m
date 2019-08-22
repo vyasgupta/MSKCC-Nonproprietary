@@ -61,7 +61,7 @@ t = data(:,1)';
 x = data(:,2)';
 
 % plot just to visualize
-% figure, plot(t, x)
+figure, plot(t, x)
 
 %% finding extrema and the baseline by averaging adjacent extrema
 
@@ -92,11 +92,12 @@ for j = 1:length(maxima)
     % fetching maxima and adjacent minima
     maxpeak = maxima(j);
     minpeak1 = minima(j);
-    minpeak2 = minima(j+1);
-
-    % find which horizontal lines reside between the maxima and the left
-    % minima and incrementing those values
-    binned = find( bin_thresholds <= maxpeak & bin_thresholds >= minpeak1);
+    
+    if j < length(minima)
+        minpeak2 = minima(j+1);
+    else
+        minpeak2 = maxima(j);
+    end
     
     % find which horizontal lines reside between the maxima and the left
     % minima and incrementing those values
@@ -111,10 +112,10 @@ for j = 1:length(maxima)
     % accounting for double counting of the highest and lowest bin. if
     % statement checks that if highest and lowest bin are the same bin, it
     % is only subtracted once
-    if length(binned) ~= 1
+    if length(binned) > 1
         bins(binned(end)) = bins(binned(end)) - 1; 
         bins(binned(1)) = bins(binned(1)) - 1;
-    else
+    elseif length(binned) == 1
         bins(binned(1)) = bins(binned(1)) - 1;
     end
     
